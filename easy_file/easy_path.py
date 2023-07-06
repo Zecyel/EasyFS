@@ -20,18 +20,18 @@ class EasyPath:
 
     # Magic Methods    
     def __init__(self, path = None) -> None:
-        self.path = EasyPath.standardization(path)
+        self.path = EasyPath.stdize(path)
 
     def __str__(self) -> str:
         return f'<EasyPath: {self.path}>'
 
     def __setattr__(self, __name: str, __value: Any) -> None:
         if __name == 'path':
-            super().__setattr__(__name, EasyPath.standardization(__value))
+            super().__setattr__(__name, EasyPath.stdize(__value))
 
     # Static Methods
     @staticmethod
-    def standardization(path: str) -> str:
+    def stdize(path: str) -> str:
         path = path.replace('\\', '/')  # shift Windows-style path to Unix-style
         if path[-1] == '/':
             path = path[:-1]    # for eg., "/etc/apt/" should be written as "/etc/apt"
@@ -54,15 +54,15 @@ class EasyPath:
 
     @staticmethod
     def join(base: str, rel: str) -> str:   # It's different to os.path.join()
-        base = EasyPath.standardization(base)
-        rel = EasyPath.standardization(rel)
+        base = EasyPath.stdize(base)
+        rel = EasyPath.stdize(rel)
         if rel[0] == '/':
             merge = base[:base.index('/')] + rel    # for eg. "C:/Pictures" and "/videos" merges to "C:/videos"
                                                     # "/home/etc" and "/dev/null" merges to "/dev/null"
         else:
             merge = f"{base}/{rel}"
 
-        return EasyPath.standardization(merge)
+        return EasyPath.stdize(merge)
 
     # Private Methods
     def __join(self, path: str) -> 'EasyPath':
