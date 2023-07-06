@@ -38,6 +38,18 @@ class EasyPath:
         if path.find('.') != -1 and path.index('.') < path.rindex('/'):
             raise Exception("Cannot dive into a file.") # you should never write "/etc/apt/sources.list/foo"
                                                         # "init.d/" is not to be considered.
+        
+        # simplify '../' and './'
+        path += '/'
+        while '../' in path:
+            indx = path.index('../')
+            lindx = path.rindex('/', 0, indx - 1)
+            path = path[:lindx] + path[indx + 3:]
+        path.replace('./', '')
+        if path[-1] == '/':
+            path = path[:-1]
+        if path == '':
+            path = '/'
         return path
 
     @staticmethod
@@ -50,18 +62,7 @@ class EasyPath:
         else:
             merge = f"{base}/{rel}"
 
-        # simplify '../' and './'
-        merge += '/'
-        while '../' in merge:
-            indx = merge.index('../')
-            lindx = merge.rindex('/', 0, indx - 1)
-            merge = merge[:lindx] + merge[indx + 3:]
-        merge.replace('./', '')
-
-        merge = EasyPath.standardization(merge)
-        if merge == '':
-            merge = '/'
-        return merge
+        return EasyPath.standardization(merge)
 
     # Private Methods
     def __join(self, path: str) -> 'EasyPath':
