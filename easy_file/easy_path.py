@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 from typing import Any, List, TypedDict
 from enum import Enum
@@ -35,21 +36,22 @@ class EasyPath:
         path = path.replace('\\', '/')  # shift Windows-style path to Unix-style
         if path[-1] == '/':
             path = path[:-1]    # for eg., "/etc/apt/" should be written as "/etc/apt"
-        if path.find('.') != -1 and path.index('.') < path.rindex('/'):
-            raise Exception("Cannot dive into a file.") # you should never write "/etc/apt/sources.list/foo"
-                                                        # "init.d/" is not to be considered.
         
         # simplify '../' and './'
         path += '/'
         while '../' in path:
             indx = path.index('../')
             lindx = path.rindex('/', 0, indx - 1)
-            path = path[:lindx] + path[indx + 3:]
-        path.replace('./', '')
+            path = path[:lindx + 1] + path[indx + 3:]
+        path = path.replace('./', '')
         if path[-1] == '/':
             path = path[:-1]
-        if path == '':
-            path = '/'
+        if path == '' or path[-1] == ':':   # add a slash for "C:/apple/.." and "/home/.."
+            path += '/'
+
+        if path.find('.') != -1 and path.index('.') < path.rindex('/'):
+            raise Exception("Cannot dive into a file.") # you should never write "/etc/apt/sources.list/foo"
+                                                        # "init.d/" is not to be considered.
         return path
 
     @staticmethod
