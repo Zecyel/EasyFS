@@ -16,9 +16,6 @@ class PropertyDict(TypedDict):
 
 class EasyPath:
 
-    # Member Definitions
-    # path: str
-
     # Magic Methods    
     def __init__(self, path = None) -> None:
         self.path = EasyPath.normalize(path)
@@ -69,6 +66,10 @@ class EasyPath:
 
         return EasyPath.normalize(merge)
 
+    @staticmethod
+    def cwd() -> 'EasyPath':
+        return EasyPath(os.getcwd())
+
     # Private Methods
     def __join(self, path: str) -> 'EasyPath':
         self.path = EasyPath.join(self.path, path)
@@ -100,4 +101,3 @@ class EasyPath:
     
     def unsel(self) -> 'EasyPath':
         return self.cd('..')
-
