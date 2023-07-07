@@ -3,11 +3,55 @@ from .context import easy_file
 
 EasyPath = easy_file.easy_path.EasyPath
 
-print('Testint EasyPath.normalize. (4)')
+print('Testing EasyPath.normalize.', end='')
 
 assert EasyPath.normalize('/home/pi/') == '/home/pi'
 assert EasyPath.normalize('C:\\Users\\Zecyel\\Desktop') == 'C:/Users/Zecyel/Desktop'
 assert EasyPath.normalize('/home/zecyel/./file.txt') == '/home/zecyel/file.txt'
 assert EasyPath.normalize('/home/zecyel/../pi/') == '/home/pi'
+assert EasyPath.normalize('/home/..') == '/'
+assert EasyPath.normalize('/home/./../') == '/'
+assert EasyPath.normalize('C:/Users/../') == 'C:/'
 
-print('Test Passed. 4/4')
+print(' Test passed. 7/7')
+
+print('Testing EasyPath.cd.       ', end='')
+a = EasyPath('\\home\\pi\\')
+assert str(a) == '<EasyPath: /home/pi>'
+a.cd('./../')
+assert a.path == '/home'
+a.cd('./..')
+assert a.path == '/'
+a.cd('./home/zecyel/')
+assert a.path == '/home/zecyel'
+a.cd('/python')
+assert a.path == '/python'
+a.cd('../')
+assert a.path == '/'
+a.cd('/home')
+assert a.path == '/home'
+
+try:
+    a.cd('./hello.txt/foo')
+except Exception as e:
+    assert str(e) == 'Cannot dive into a file.'
+assert a.path == '/home'
+
+print(' Test passed. 9/9')
+
+print('Testing EasyPath.sel.       ', end='')
+
+a = EasyPath('/home/pi')
+a.sel('foo.txt')
+assert a.path == '/home/pi/foo.txt'
+
+try:
+    a.sel('bar.foo')
+except Exception as e:
+    assert str(e) == 'Cannot dive into a file.'
+
+assert a.path == '/home/pi/foo.txt'
+a.unsel()
+assert a.path == '/home/pi'
+
+print('Test passed. 3/3')

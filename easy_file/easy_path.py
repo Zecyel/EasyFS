@@ -39,11 +39,12 @@ class EasyPath:
         
         # simplify '../' and './'
         path += '/'
+        path = path.replace('/./', '/')
+
         while '../' in path:
             indx = path.index('../')
             lindx = path.rindex('/', 0, indx - 1)
             path = path[:lindx + 1] + path[indx + 3:]
-        path = path.replace('./', '')
         if path[-1] == '/':
             path = path[:-1]
         if path == '' or path[-1] == ':':   # add a slash for "C:/apple/.." and "/home/.."
@@ -57,12 +58,14 @@ class EasyPath:
     @staticmethod
     def join(base: str, rel: str) -> str:   # It's different to os.path.join()
         base = EasyPath.normalize(base)
-        rel = EasyPath.normalize(rel)
-        if rel[0] == '/':
+        if rel[0] in '/\\':
             merge = base[:base.index('/')] + rel    # for eg. "C:/Pictures" and "/videos" merges to "C:/videos"
                                                     # "/home/etc" and "/dev/null" merges to "/dev/null"
         else:
-            merge = f"{base}/{rel}"
+            if base[-1] == '/': # "/" and "C:/" and etc.
+                merge = base + rel
+            else:
+                merge = f"{base}/{rel}"
 
         return EasyPath.normalize(merge)
 
