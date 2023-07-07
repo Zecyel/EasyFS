@@ -16,8 +16,7 @@ class PropertyDict(TypedDict):
 
 class EasyPath:
 
-    # Magic Methods    
-    def __init__(self, path = None) -> None:
+    def __init__(self, path = '') -> None:
         self.path = EasyPath.normalize(path)
 
     def __str__(self) -> str:
@@ -27,7 +26,6 @@ class EasyPath:
         if __name == 'path':
             super().__setattr__(__name, EasyPath.normalize(__value))
 
-    # Static Methods
     @staticmethod
     def normalize(path: str) -> str:
         path = path.replace('\\', '/')  # shift Windows-style path to Unix-style
@@ -70,12 +68,10 @@ class EasyPath:
     def cwd() -> 'EasyPath':
         return EasyPath(os.getcwd())
 
-    # Private Methods
     def __join(self, path: str) -> 'EasyPath':
         self.path = EasyPath.join(self.path, path)
         return self
 
-    # Public Methods
     def cd(self, rel: str) -> 'EasyPath':
         return self.__join(rel)
 
