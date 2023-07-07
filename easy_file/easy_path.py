@@ -96,5 +96,5 @@ class EasyPath:
         return self.cd(filename)
     
     def unsel(self) -> 'EasyPath':
-        return self.cd('../')
+        return self.cd('..')
 
