@@ -54,4 +54,9 @@ assert a.path == '/home/pi/foo.txt'
 a.unsel()
 assert a.path == '/home/pi'
 
-print('Test passed. 3/3')
+a.cd('/')
+assert a.path == '/'
+a.sel('1.txt')
+assert a.path == '/1.txt'
+
+print('Test passed. 5/5')
