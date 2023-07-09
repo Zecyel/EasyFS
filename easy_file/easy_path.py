@@ -16,6 +16,8 @@ class PropertyDict(TypedDict):
 
 class EasyPath:
 
+    path: str
+
     def __init__(self, path = '') -> None:
         self.path = EasyPath.normalize(path)
 
