@@ -99,3 +99,6 @@ class EasyPath:
     
     def unsel(self) -> 'EasyPath':
         return self.cd('..')
+
+    def clone(self) -> 'EasyPath':
+        return EasyPath(self.path)
