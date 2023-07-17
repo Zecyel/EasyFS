@@ -16,17 +16,13 @@ class PropertyDict(TypedDict):
 
 class EasyPath:
 
-    path: str
+    _path: str
 
     def __init__(self, path = '') -> None:
-        self.path = EasyPath.normalize(path)
+        self._path = EasyPath.normalize(path)
 
     def __str__(self) -> str:
-        return f'<EasyPath: {self.path}>'
-
-    def __setattr__(self, __name: str, __value: Any) -> None:
-        if __name == 'path':
-            super().__setattr__(__name, EasyPath.normalize(__value))
+        return f'<EasyPath: {self._path}>'
 
     @staticmethod
     def normalize(path: str) -> str:
@@ -69,20 +65,28 @@ class EasyPath:
     @staticmethod
     def cwd() -> 'EasyPath':
         return EasyPath(os.getcwd())
+    
+    @property
+    def path(self) -> str:
+        return self._path
+
+    @path.setter
+    def path(self, __value: str) -> None:
+        super().__setattr__('path', EasyPath.normalize(__value))
 
     def __join(self, path: str) -> 'EasyPath':
-        self.path = EasyPath.join(self.path, path)
+        self._path = EasyPath.join(self._path, path)
         return self
 
     def cd(self, rel: str) -> 'EasyPath':
         return self.__join(rel)
 
     def ls(self) -> List[PropertyDict]:
-        lst = os.listdir(self.path)
+        lst = os.listdir(self._path)
         ret = []
         for item in lst:
             dic: PropertyDict = {'name': item}
-            path = os.path.join(self.path, item)
+            path = os.path.join(self._path, item)
             dic['path'] = EasyPath(path)
             if os.path.isfile(path):
                 dic['type'] = ItemType.FILE
@@ -101,4 +105,4 @@ class EasyPath:
         return self.cd('..')
 
     def clone(self) -> 'EasyPath':
-        return EasyPath(self.path)
+        return EasyPath(self._path)

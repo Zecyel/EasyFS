@@ -18,8 +18,6 @@ pip install easy_file
 
 以下是一个简单示例，详细文档参见[Documentation](./doc/index.md)。
 
-
-
 ## Testing
 
 在项目根目录下运行如下命令，即可运行所有测试用例。

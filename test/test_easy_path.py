@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-from .context import easy_file
+from .context import easy_fs
 
-EasyPath = easy_file.easy_path.EasyPath
+EasyPath = easy_fs.easy_path.EasyPath
 
 print('Testing EasyPath.normalize.', end='')
 
